@@ -49,7 +49,7 @@ namespace Aoc25.Day1B
         {
             ulong puzzleResult = 0;
 
-            if(TryGetPuzzleInput(args, out string puzzleInput))
+            if(TryGetPuzzleInput(args, out string? puzzleInput))
             {
                 BenchmarkTimer.Tick();
                 puzzleResult = PuzzleSolver.Solve(puzzleInput);

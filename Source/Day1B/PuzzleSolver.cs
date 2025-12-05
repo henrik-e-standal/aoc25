@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace Aoc25.Day1B
 {
     /// <summary>
-    /// Stores valid solutions to different puzzle inputs.
+    /// Contains the puzzle solving code.
     /// </summary>
     internal static class PuzzleSolver
     {
