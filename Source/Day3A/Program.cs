@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Aoc25.Common;
 
-namespace Aoc25.Day1A
+namespace Aoc25.Day3A
 {
     public class Program
     {
