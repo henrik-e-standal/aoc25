@@ -31,7 +31,7 @@ namespace Aoc25.Common
         public static void Tock()
         {
             stopwatch.Stop();
-            FastConsole.WriteLine($"Time elapsed: {(stopwatch.ElapsedTicks * 1000.0) / Stopwatch.Frequency}ms.");
+            Console.WriteLine($"Time elapsed: {(stopwatch.ElapsedTicks * 1000.0) / Stopwatch.Frequency}ms.");
         }   
     }
 }

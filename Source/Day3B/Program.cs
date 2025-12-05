@@ -55,7 +55,7 @@ namespace Aoc25.Day3B
                 BenchmarkTimer.Tock();
             }
 
-            FastConsole.WriteLine(puzzleResult);     
+            Console.WriteLine(puzzleResult);     
 #if DEBUG
             if(PuzzleResult.IsValidatable(puzzleInput)) {
                 Debug.Assert(PuzzleResult.IsValid(puzzleInput, puzzleResult));
