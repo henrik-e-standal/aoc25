@@ -1,0 +1,7 @@
+
+<Solution>
+    <Project Path="Source/Common/Common.csproj" /> 
+    <Project Path="Source/Day1A/Day1A.csproj" /> 
+    <Project Path="Source/Day1B/Day1B.csproj" />
+</Solution>
+
