@@ -9,8 +9,14 @@ namespace Aoc25.Day4A
     /// </summary>
     internal static class PuzzleSolver
     {
+        /// <summary>
+        /// The character used to represent an empty grid cell.
+        /// </summary>
         private const char EmptyCellCharacter = '.';
 
+        /// <summary>
+        /// The character used to represent an occupied grid cell.
+        /// </summary>
         private const char OccupiedCellCharacter = '@';
 
         private const int OccupancyGridMargin = 1;
@@ -53,7 +59,7 @@ namespace Aoc25.Day4A
         /// <param name="gridWidth"></param>
         /// <param name="gridHeight"></param>
         /// <returns></returns>
-        private static FastGrid<byte> CreateGridOccupancyLookup(string puzzleInput, int gridWidth, int gridHeight)
+        private static FastGrid<byte> CreateGridOccupancyIndex(string puzzleInput, int gridWidth, int gridHeight)
         {
             // Allocate a two dimensional data structure to store which cells are occupied 
             // and which are empty. Also allocate a margin around the entire grid. This makes 
@@ -90,27 +96,27 @@ namespace Aoc25.Day4A
         /// </summary>
         /// <param name="gridOccupancyLookup"></param>
         /// <returns> The </returns>
-        private static uint CountForkliftAccessibleGridCells(FastGrid<byte> gridOccupancyLookup)
+        private static uint CountForkliftAccessibleGridCells(FastGrid<byte> gridCellOccupancyIndex)
         {
             uint accessibleGridCells = 0;
 
             // Enumerate every row in the grid (skipping the margins added when creating the grid occupancy lookup).
-            for(int row = OccupancyGridMargin; row < (gridOccupancyLookup.RowCount - OccupancyGridMargin); row++)
+            for(int row = OccupancyGridMargin; row < (gridCellOccupancyIndex.RowCount - OccupancyGridMargin); row++)
             {
                 // Enumerate every column in the grid (skipping the margins added when creating the grid occupancy lookup).
-                for(int column = OccupancyGridMargin; column < (gridOccupancyLookup.ColumnCount - OccupancyGridMargin); column++)
+                for(int column = OccupancyGridMargin; column < (gridCellOccupancyIndex.ColumnCount - OccupancyGridMargin); column++)
                 {
-                    if(gridOccupancyLookup[row, column] == 1)
+                    if(gridCellOccupancyIndex[row, column] == 1)
                     {
                         var occupiedNeighbourCount = (
-                            gridOccupancyLookup[row-1, column-1] +
-                            gridOccupancyLookup[row-1, column] +
-                            gridOccupancyLookup[row-1, column+1] +
-                            gridOccupancyLookup[row, column-1] +
-                            gridOccupancyLookup[row, column+1] +
-                            gridOccupancyLookup[row+1, column-1] +
-                            gridOccupancyLookup[row+1, column] +
-                            gridOccupancyLookup[row+1, column+1]);
+                            gridCellOccupancyIndex[row-1, column-1] +
+                            gridCellOccupancyIndex[row-1, column] +
+                            gridCellOccupancyIndex[row-1, column+1] +
+                            gridCellOccupancyIndex[row, column-1] +
+                            gridCellOccupancyIndex[row, column+1] +
+                            gridCellOccupancyIndex[row+1, column-1] +
+                            gridCellOccupancyIndex[row+1, column] +
+                            gridCellOccupancyIndex[row+1, column+1]);
 
                         if(occupiedNeighbourCount < 4) {
                             accessibleGridCells ++;
@@ -130,8 +136,8 @@ namespace Aoc25.Day4A
         public static ulong Solve(string puzzleInput)
         {
             var (gridWidth, gridHeight) = DetermineGridDimensions(puzzleInput);
-            var gridCellOccupancyLookup = CreateGridOccupancyLookup(puzzleInput, gridWidth, gridHeight);
-            var forkliftAccessibleGridCellCount = CountForkliftAccessibleGridCells(gridCellOccupancyLookup);
+            var gridCellOccupancyIndex = CreateGridOccupancyIndex(puzzleInput, gridWidth, gridHeight);
+            var forkliftAccessibleGridCellCount = CountForkliftAccessibleGridCells(gridCellOccupancyIndex);
 
             return (ulong)forkliftAccessibleGridCellCount;
         }
