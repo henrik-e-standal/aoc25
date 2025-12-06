@@ -5,7 +5,7 @@ namespace Aoc25.Day3A
     /// <summary>
     /// Stores valid solutions to different puzzle inputs.
     /// </summary>
-    internal static class PuzzleResult
+    public static class PuzzleResult
     {
         /// <summary>
         /// The correct result when solving for the example puzzle input.

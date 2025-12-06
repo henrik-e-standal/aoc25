@@ -5,7 +5,7 @@ namespace Aoc25.Day1A
     /// <summary>
     /// Contains global immutable state.
     /// </summary>
-    internal static class PuzzleInput
+    public static class PuzzleInput
     {
         /// <summary>
         /// The puzzle example input.

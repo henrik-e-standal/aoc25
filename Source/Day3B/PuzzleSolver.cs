@@ -6,7 +6,7 @@ namespace Aoc25.Day3B
     /// <summary>
     /// Contains the puzzle solving code.
     /// </summary>
-    internal static class PuzzleSolver
+    public static class PuzzleSolver
     {
         /// <summary>
         /// The maximum number of batteries one bank can contain.
