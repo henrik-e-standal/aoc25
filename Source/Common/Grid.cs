@@ -10,7 +10,7 @@ namespace Aoc25.Common
     /// Extend the implementation with new functionality as needed.
     /// </remarks>
     /// <typeparam name="T"> The type of items stored in the grid. </typeparam>
-    public sealed class FastGrid<T>
+    public sealed class Grid<T>
     {
         /// <summary>
         /// Stores the contents of the grid.
@@ -62,7 +62,7 @@ namespace Aoc25.Common
         /// </summary>
         /// <param name="columnCount"> The number of columns in the grid. </param>
         /// <param name="rowCount"> The number of rows in the grid. </param>
-        public FastGrid(int columnCount, int rowCount)
+        public Grid(int columnCount, int rowCount)
         {
             ColumnCount = columnCount;
             RowCount = rowCount;

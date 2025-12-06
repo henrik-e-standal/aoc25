@@ -68,12 +68,12 @@ namespace Aoc25.Day4A
         /// <param name="gridColumnCount"> The number of columns in the puzzle grid. </param>
         /// <param name="gridRowCount">  The number of rwos in the puzzle grid. </param>
         /// <returns> A 2-dimensional array that keeps track of which grid cells are occupied. </returns>
-        private static FastGrid<byte> CreateGridOccupancyIndex(string puzzleInput, int gridColumnCount, int gridRowCount)
+        private static Grid<byte> CreateGridOccupancyIndex(string puzzleInput, int gridColumnCount, int gridRowCount)
         {
             // Allocate a 2-dimensional data structure to keep track of which cells are occupied 
             // and which are empty. Also allocate a margin around the entire grid. This makes 
             // checking occupancy of neighboring cells of a cell easier later.  
-            var gridOccupancyLookup = new FastGrid<byte>(
+            var gridOccupancyLookup = new Grid<byte>(
                 gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin), 
                 gridRowCount + (OccupancyGridMargin + OccupancyGridMargin));
 
@@ -105,7 +105,7 @@ namespace Aoc25.Day4A
         /// </summary>
         /// <param name="gridCellOccupancyIndex"> A 2-dimensional array that keeps track of which grid cells are occupied. </param>
         /// <returns> The number of grid cells accessible by forklift. </returns>
-        private static uint CountForkliftAccessibleGridCells(FastGrid<byte> gridCellOccupancyIndex)
+        private static uint CountForkliftAccessibleGridCells(Grid<byte> gridCellOccupancyIndex)
         {
             uint accessibleGridCells = 0;
 
