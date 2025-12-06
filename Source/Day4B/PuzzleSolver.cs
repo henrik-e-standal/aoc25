@@ -9,24 +9,27 @@ namespace Aoc25.Day4B
     /// </summary>
     internal static class PuzzleSolver
     {
+        /// <summary>
+        /// The character used to represent an empty grid cell.
+        /// </summary>
         private const char EmptyCellCharacter = '.';
 
-        private const char OccupiedCellCharacter = '@';
-
-        private const int OccupancyGridMargin = 1;
-
         /// <summary>
-        /// Attempts to get the numeric number of a character.
+        /// The character used to represent an occupied grid cell.
         /// </summary>
-        /// <param name="character"> The character whose numeric value to get. </param>
-        /// <param name="numericValue"> The numeric value of the character. </param>
-        /// <returns> True if the character was a number, otherwise false. </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool TryGetCharacterNumericValue(char character, out uint numericValue)
-        {
-            numericValue = (uint)(character - '0');
-            return (numericValue <= 9);
-        }
+        private const char OccupiedCellCharacter = '@';
+   
+        /// <summary>
+        /// The size of the extra margin to allocate for the 2-dimensional grid 
+        /// data structure that keeps track how many occupied neighbor cells each
+        /// grid cell has. 
+        /// </summary>
+        /// <remarks>
+        /// This margin simplifies lookup of a grid cell's neighbor cells,
+        /// as we don't have to worry about going outside of the grid's bounds
+        /// when doing grid[currentCellRow - 1, currentCellColumn], for example.
+        /// </remarks>
+        private const int OccupancyGridMargin = 1;
 
         /// <summary>
         /// Determines whether a character represents a grid cell.
@@ -62,22 +65,22 @@ namespace Aoc25.Day4B
         /// <summary>
         /// Creates a 2-dimensional grid 
         /// </summary>
-        /// <param name="puzzleInput"></param>
-        /// <param name="gridWidth"></param>
-        /// <param name="gridHeight"></param>
-        /// <returns></returns>
-        private static (FastGrid<byte> gridOccupancyLookup, FastList<(int row, int column)> X)
-            CreateGridCellOccupancyIndexes(string puzzleInput, int gridWidth, int gridHeight)
+        /// <param name="puzzleInput"> The puzzle input containing the grid. </param>
+        /// <param name="gridColumnCount"> The number of columns in the puzzle grid. </param>
+        /// <param name="gridRowCount">  The number of rwos in the puzzle grid. </param>
+        /// <returns> A 2-dimensional array that keeps track of which grid cells are occupied. </returns>
+        private static (FastGrid<byte> gridOccupiedNeighborLookup, FastList<(int Row, int Column)> gridOccupiedCellCoordinates)
+            CreateGridCellOccupancyIndexes(string puzzleInput, int gridColumnCount, int gridRowCount)
         {
-            // Allocate a two dimensional data structure to store which cells are occupied 
-            // and which are empty. Also allocate a margin around the entire grid. This makes 
-            // checking occupancy of neighboring cells of a cell easier later.  
+            // Allocate a two dimensional data structure to store how many occupied neighbor 
+            // cells each grid cell has. Also allocate a margin around the entire grid. This 
+            // makes checking occupancy of neighboring cells of a cell easier later.  
             var gridOccupancyLookup = new FastGrid<byte>(
-                gridWidth + OccupancyGridMargin + OccupancyGridMargin, 
-                gridHeight + OccupancyGridMargin + OccupancyGridMargin);
+                gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin), 
+                gridRowCount + (OccupancyGridMargin + OccupancyGridMargin));
 
             // 
-            var gridOccupancyList = new FastList<(int, int)>((gridWidth * gridHeight));
+            var gridOccupiedCellCoordinates = new FastList<(int Row, int Column)>((gridColumnCount * gridRowCount));
 
             int currentRow = OccupancyGridMargin; 
             int currentColumn = 0;
@@ -91,7 +94,7 @@ namespace Aoc25.Day4B
                 if(currentCharacter == OccupiedCellCharacter)
                 {
                     gridOccupancyLookup[currentRow, currentColumn] = 1;
-                    gridOccupancyList.Add((currentRow, currentColumn));
+                    gridOccupiedCellCoordinates.Add((currentRow, currentColumn));
                 }
                 else if(currentCharacter != EmptyCellCharacter)
                 {
@@ -100,7 +103,25 @@ namespace Aoc25.Day4B
                 }
             }
 
-            return (gridOccupancyLookup, gridOccupancyList);
+            // Calculate the number of occupied neighbor cells for each 
+            for(int i = 0; i < gridOccupiedCellCoordinates.Count; i++)
+            {
+                int row = gridOccupiedCellCoordinates[i].Row;
+                int column = gridOccupiedCellCoordinates[i].Column;
+
+                gridOccupancyLookup[row, column] = (byte)(
+                    ((gridOccupancyLookup[row-1, column-1] == 0) ? 0 : 1) +
+                    ((gridOccupancyLookup[row-1, column] == 0) ? 0 : 1) +
+                    ((gridOccupancyLookup[row-1, column+1] == 0) ? 0 : 1) +
+                    ((gridOccupancyLookup[row, column-1] == 0) ? 0 : 1) +
+                    gridOccupancyLookup[row, column+1] +
+                    gridOccupancyLookup[row+1, column-1] +
+                    gridOccupancyLookup[row+1, column] +
+                    gridOccupancyLookup[row+1, column+1]
+                );
+            }
+
+            return (gridOccupancyLookup, gridOccupiedCellCoordinates);
         }
 
         /// <summary>
@@ -108,43 +129,48 @@ namespace Aoc25.Day4B
         /// </summary>
         /// <param name="gridOccupancyLookup"></param>
         /// <returns> The </returns>
-        private static uint CountForkliftAccessibleGridCells(FastGrid<byte> gridOccupancyLookup, FastList<(int Row, int Column)> gridOccupancyList)
+        private static uint CountForkliftClearableGridCells(
+            FastGrid<byte> gridOccupancyLookup, 
+            FastList<(int Row, int Column)> gridOccupiedCellCoordinates)
         {
-            uint rollsRemoved = 0;
+            uint clearedCellCount = 0;
             int previousOccupiedCount;
 
-            // Keeps looking as long as 
+            // Keeps trying to clear cells as long as at least one cell was removed last iteration.
             do
             {
-                previousOccupiedCount = gridOccupancyList.Count;
+                previousOccupiedCount = gridOccupiedCellCoordinates.Count;
 
-                for(int i = 0; i < gridOccupancyList.Count; i++)
+                // Check the current neighbor count of every occupied grid cell.
+                for(int i = 0; i < gridOccupiedCellCoordinates.Count; i++)
                 {
-                    int row = gridOccupancyList[i].Row;
-                    int column = gridOccupancyList[i].Column;
+                    int row = gridOccupiedCellCoordinates[i].Row;
+                    int column = gridOccupiedCellCoordinates[i].Column;
 
-                    var occupiedNeighbourCount = (
-                        gridOccupancyLookup[row-1, column-1] +
-                        gridOccupancyLookup[row-1, column] +
-                        gridOccupancyLookup[row-1, column+1] +
-                        gridOccupancyLookup[row, column-1] +
-                        gridOccupancyLookup[row, column+1] +
-                        gridOccupancyLookup[row+1, column-1] +
-                        gridOccupancyLookup[row+1, column] +
-                        gridOccupancyLookup[row+1, column+1]);
-
-                    if(occupiedNeighbourCount < 4) 
+                    // Check how many occupied neighbors the current grid cell has, and 
+                    // remove it if it has less than 4. If removed, we must decrement
+                    // the occupied neighbor count of each adjacent grid cell.
+                    if(gridOccupancyLookup[row, column] < 4)
                     {
-                        gridOccupancyList.RemoveAt(i);
+                        gridOccupancyLookup[row-1, column-1]--;
+                        gridOccupancyLookup[row-1, column]--;
+                        gridOccupancyLookup[row-1, column+1]--;
+                        gridOccupancyLookup[row, column-1]--;
                         gridOccupancyLookup[row, column] = 0;
-                        rollsRemoved++;
+                        gridOccupancyLookup[row, column+1]--;
+                        gridOccupancyLookup[row+1, column-1]--;
+                        gridOccupancyLookup[row+1, column]--;
+                        gridOccupancyLookup[row+1, column+1]--;
+
+                        gridOccupiedCellCoordinates.RemoveAt(i);
+                        clearedCellCount++;
                         i--;
                     }
                 }
                 
-            } while(gridOccupancyList.Count != previousOccupiedCount);
+            } while(gridOccupiedCellCoordinates.Count != previousOccupiedCount);
            
-            return rollsRemoved;
+            return clearedCellCount;
         }
 
         /// <summary>
@@ -156,16 +182,16 @@ namespace Aoc25.Day4B
         {
             var (gridWidth, gridHeight) = DetermineGridDimensions(puzzleInput);
 
-            var (gridCellOccupancyLookup, gridCellOccupiesCoordinates) = CreateGridCellOccupancyIndexes(
+            var (gridCellOccupancyLookup, gridOccupiedCellCoordinates) = CreateGridCellOccupancyIndexes(
                 puzzleInput, 
                 gridWidth,
                 gridHeight);
                 
-            var forkliftAccessibleGridCellCount = CountForkliftAccessibleGridCells(
+            var forkliftClearableGridCellCount = CountForkliftClearableGridCells(
                 gridCellOccupancyLookup, 
-                gridCellOccupiesCoordinates);
+                gridOccupiedCellCoordinates);
 
-            return (ulong)forkliftAccessibleGridCellCount;
+            return (ulong)forkliftClearableGridCellCount;
         }
     }
 }

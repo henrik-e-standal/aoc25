@@ -19,6 +19,15 @@ namespace Aoc25.Day4A
         /// </summary>
         private const char OccupiedCellCharacter = '@';
 
+        /// <summary>
+        /// The size of the extra margin to allocate for the 2-dimensional grid 
+        /// data structure that keeps track of which grid cells are occupied.
+        /// </summary>
+        /// <remarks>
+        /// This margin simplifies lookup of a grid cell's neighbor cells,
+        /// as we don't have to worry about going outside of the grid's bounds
+        /// when doing grid[currentCellRow - 1, currentCellColumn], for example.
+        /// </remarks>
         private const int OccupancyGridMargin = 1;
 
         /// <summary>
@@ -36,37 +45,37 @@ namespace Aoc25.Day4A
         /// </summary>
         /// <param name="puzzleInput"> The puzzle input containing the grid. </param>
         /// <returns> The width and height of the puzzle grid. </returns>
-        private static (int gridWidth, int gridHeight) DetermineGridDimensions(string puzzleInput)
+        private static (int gridColumnCount, int gridRowCount) DetermineGridDimensions(string puzzleInput)
         {
-            int gridWidth = 0;
+            int gridColumnCount = 0;
 
             // Determine the width of a single grid row of the input.
-            while (CharacterIsGridCell(puzzleInput[gridWidth])) {
-                gridWidth++;
+            while (CharacterIsGridCell(puzzleInput[gridColumnCount])) {
+                gridColumnCount++;
             }
 
             // Determines the height of the grid in the input.
             // Assumption: Each row consists of [gridWidth] cells plus a single newline.
-            int gridHeight = (puzzleInput.Length / (gridWidth + 1));
+            int gridRowCount = (puzzleInput.Length / (gridColumnCount + 1));
 
-            return(gridWidth, gridHeight);
+            return(gridColumnCount, gridRowCount);
         }
 
         /// <summary>
-        /// Creates a 2-dimensional grid 
+        /// Creates a 2-dimensional array that keeps track of which grid cells are occupied.
         /// </summary>
-        /// <param name="puzzleInput"></param>
-        /// <param name="gridWidth"></param>
-        /// <param name="gridHeight"></param>
-        /// <returns></returns>
-        private static FastGrid<byte> CreateGridOccupancyIndex(string puzzleInput, int gridWidth, int gridHeight)
+        /// <param name="puzzleInput"> The puzzle input containing the grid. </param>
+        /// <param name="gridColumnCount"> The number of columns in the puzzle grid. </param>
+        /// <param name="gridRowCount">  The number of rwos in the puzzle grid. </param>
+        /// <returns> A 2-dimensional array that keeps track of which grid cells are occupied. </returns>
+        private static FastGrid<byte> CreateGridOccupancyIndex(string puzzleInput, int gridColumnCount, int gridRowCount)
         {
-            // Allocate a two dimensional data structure to store which cells are occupied 
+            // Allocate a 2-dimensional data structure to keep track of which cells are occupied 
             // and which are empty. Also allocate a margin around the entire grid. This makes 
             // checking occupancy of neighboring cells of a cell easier later.  
             var gridOccupancyLookup = new FastGrid<byte>(
-                gridWidth + OccupancyGridMargin + OccupancyGridMargin, 
-                gridHeight + OccupancyGridMargin + OccupancyGridMargin);
+                gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin), 
+                gridRowCount + (OccupancyGridMargin + OccupancyGridMargin));
 
             int currentRow = OccupancyGridMargin; 
             int currentColumn = 0;
@@ -94,8 +103,8 @@ namespace Aoc25.Day4A
         /// <summary>
         /// Count the number of grid cells accessible by forklift (occupied cells with fewer 4 occupied neighbors).
         /// </summary>
-        /// <param name="gridOccupancyLookup"></param>
-        /// <returns> The </returns>
+        /// <param name="gridCellOccupancyIndex"> A 2-dimensional array that keeps track of which grid cells are occupied. </param>
+        /// <returns> The number of grid cells accessible by forklift. </returns>
         private static uint CountForkliftAccessibleGridCells(FastGrid<byte> gridCellOccupancyIndex)
         {
             uint accessibleGridCells = 0;
@@ -106,7 +115,7 @@ namespace Aoc25.Day4A
                 // Enumerate every column in the grid (skipping the margins added when creating the grid occupancy lookup).
                 for(int column = OccupancyGridMargin; column < (gridCellOccupancyIndex.ColumnCount - OccupancyGridMargin); column++)
                 {
-                    if(gridCellOccupancyIndex[row, column] == 1)
+                    if(gridCellOccupancyIndex[row, column] != 0)
                     {
                         var occupiedNeighbourCount = (
                             gridCellOccupancyIndex[row-1, column-1] +
@@ -135,8 +144,8 @@ namespace Aoc25.Day4A
         /// <returns> The solution to the puzzle, solving for the passed puzzle input. </returns>
         public static ulong Solve(string puzzleInput)
         {
-            var (gridWidth, gridHeight) = DetermineGridDimensions(puzzleInput);
-            var gridCellOccupancyIndex = CreateGridOccupancyIndex(puzzleInput, gridWidth, gridHeight);
+            var (gridColumnCount, gridRowCount) = DetermineGridDimensions(puzzleInput);
+            var gridCellOccupancyIndex = CreateGridOccupancyIndex(puzzleInput, gridColumnCount, gridRowCount);
             var forkliftAccessibleGridCellCount = CountForkliftAccessibleGridCells(gridCellOccupancyIndex);
 
             return (ulong)forkliftAccessibleGridCellCount;
