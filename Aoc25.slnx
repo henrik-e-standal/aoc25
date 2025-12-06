@@ -4,6 +4,8 @@
     <Project Path="Source/Day1A/Day1A.csproj" /> 
     <Project Path="Source/Day1B/Day1B.csproj" /> 
     <Project Path="Source/Day3A/Day3A.csproj" /> 
-    <Project Path="Source/Day3B/Day3B.csproj" />
+    <Project Path="Source/Day3B/Day3B.csproj" /> 
+    <Project Path="Source/Day4A/Day4A.csproj" /> 
+    <Project Path="Source/Day4B/Day4B.csproj" />
 </Solution>
 

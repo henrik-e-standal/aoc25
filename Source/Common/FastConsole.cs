@@ -15,7 +15,7 @@ namespace Aoc25.Common
         private const int StdoutDescriptorId = 1;
 
         /// <summary>
-        /// The 'write' 
+        /// Imported console write function from libc.
         /// </summary>
         /// <remarks>
         /// See documentation at: https://man7.org/linux/man-pages/man2/write.2.html

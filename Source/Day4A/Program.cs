@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Aoc25.Common;
 
-namespace Aoc25.Day3B
+namespace Aoc25.Day4A
 {
     public class Program
     {
