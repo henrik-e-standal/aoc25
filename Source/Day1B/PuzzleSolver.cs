@@ -6,7 +6,7 @@ namespace Aoc25.Day1B
     /// <summary>
     /// Contains the puzzle solving code.
     /// </summary>
-    internal static class PuzzleSolver
+    public static class PuzzleSolver
     {
         /// <summary>
         /// Represents different directions the dial can be rotated.

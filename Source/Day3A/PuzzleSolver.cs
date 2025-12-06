@@ -6,7 +6,7 @@ namespace Aoc25.Day3A
     /// <summary>
     /// Contains the puzzle solving code.
     /// </summary>
-    internal static class PuzzleSolver
+    public static class PuzzleSolver
     {
         /// <summary>
         /// Attempts to get the numeric number of a character.

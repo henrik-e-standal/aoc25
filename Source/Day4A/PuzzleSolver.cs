@@ -7,7 +7,7 @@ namespace Aoc25.Day4A
     /// <summary>
     /// Contains the puzzle solving code.
     /// </summary>
-    internal static class PuzzleSolver
+    public static class PuzzleSolver
     {
         /// <summary>
         /// The character used to represent an empty grid cell.
