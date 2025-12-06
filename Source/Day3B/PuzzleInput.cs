@@ -5,7 +5,7 @@ namespace Aoc25.Day3B
     /// <summary>
     /// Stores hardcoded puzzle inputs.
     /// </summary>
-    internal static class PuzzleInput
+    public static class PuzzleInput
     {
         /// <summary>
         /// The puzzle example input.
