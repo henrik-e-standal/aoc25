@@ -1,4 +1,5 @@
 
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Aoc25.Common
@@ -39,6 +40,18 @@ namespace Aoc25.Common
             return (power <= MaxDigitsInUlong) ? 
                 pow10LookupTable[power] : 
                 ulong.MaxValue;
+        }
+
+        /// <summary>
+        /// Determines whether a value is a power of two.
+        /// </summary>
+        /// <typeparam name="T"> The value type. </typeparam>
+        /// <param name="value"> The value to check. </param>
+        /// <returns> True if the value is a power of two, otherwise false. </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsPowerOfTwo<T>(T value) where T : IBinaryInteger<T>
+        {
+            return (value != T.Zero) && ((value & (value - T.One)) == T.Zero);
         }
     }
 }
