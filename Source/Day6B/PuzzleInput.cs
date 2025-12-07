@@ -13,9 +13,9 @@ namespace Aoc25.Day6B
         public static readonly string Example = 
         """
         123 328  51 64 
-        45 64  387 23 
-        6 98  215 314
-        *   +   *   + 
+         45 64  387 23 
+          6 98  215 314
+        *   +   *   +  
         """;
 
         /// <summary>

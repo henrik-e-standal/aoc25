@@ -15,7 +15,7 @@ namespace Aoc25.Day6B
         /// </summary>
         private const int MaxSupportedMathProblemCalculations = 1024;
 
-        private const int X = 16;
+        private const int X = 15;
 
         [InlineArray(X)]
         private struct FixedArray<T>
@@ -27,6 +27,17 @@ namespace Aoc25.Day6B
         /// Represents a math problem calculation.
         /// </summary>
         [DebuggerDisplay("{OperationCharacter} {Result}")]
+        private struct MathProblemOperator
+        {
+            public char OperationCharacter;
+
+            public int LineIndexOffset;
+        }
+
+        /// <summary>
+        /// Represents a math problem calculation.
+        /// </summary>
+        [DebuggerDisplay("{OperationCharacter} {OperationCharacterLineIndex}")]
         private struct MathProblem
         {
             /// <summary>
@@ -34,10 +45,14 @@ namespace Aoc25.Day6B
             /// </summary>
             public FixedArray<uint> Numbers;
 
+            public ushort Length;
+
             /// <summary>
             /// The character that specifies the math operation to perform in this calculation.
             /// </summary>
             public char OperationCharacter;
+
+            public int OperationCharacterLineOffset;
         }
 
         /// <summary>
@@ -97,6 +112,7 @@ namespace Aoc25.Day6B
                 if((currentChar == '*') || (currentChar ==  '+'))
                 {
                     mathProblems[mathProblemCount].OperationCharacter = currentChar;
+                    mathProblems[mathProblemCount].OperationCharacterLineOffset = i;
                     mathProblemCount++;
                 }
                 else if(currentChar == MathProblemNumberLineSeparator)
@@ -105,7 +121,25 @@ namespace Aoc25.Day6B
                 }
             }
 
-            lastDigitIndex = (i + 1);
+            //Array.Reverse()
+
+            for(int j = 0; j < mathProblemCount; j++)
+            {
+                
+            }
+
+            lastDigitIndex = (i - 1);
+        }
+
+          private static void DetermineMathProblemNumbers2(
+            string puzzleInput, 
+            MathProblem[] mathProblems,
+            int lastDigitIndex)
+        {
+            while(true)
+            {
+                
+            }
         }
 
         /// <summary>
@@ -121,27 +155,31 @@ namespace Aoc25.Day6B
         {
             int mathProblemOffset = 0;
             
-            for(int i = lastDigitIndex; i >= 0; i--)
+            for(int i = 0; i <= puzzleInput.Length; i++)
             {
                 if(puzzleInput[i] != MathProblemNumberLineSeparator)
                 {
+                    if(mathProblemOffset == 2)
+                    {
+                        Console.WriteLine("");
+                    }
                     int mathProblemNumberOffset = 0;
 
-                    // Ignore trailing whitespaces (i.e. zeros) in the current math problem number.
+                    // Ignore leading whitespaces (i.e. zeros) in the current math problem number.
                     while(puzzleInput[i] == MathProblemNumberSeparator) 
                     {
-                        i--;
+                        i++;
                         mathProblemNumberOffset++;
                     }
 
-                    // 
+                    // Bla bla
                     while(TryGetCharacterNumericValue(puzzleInput[i], out uint parsedValue))
                     {
-                        mathProblems[mathProblemOffset].Numbers[mathProblemNumberOffset] += 
-                            (x * parsedValue);
+                        ref uint mathProblemNumber = ref mathProblems[mathProblemOffset].Numbers[mathProblemNumberOffset];
                         
-                        mathProblemDigitOffset++;
-                        i--;
+                        mathProblemNumber = (mathProblemNumber * 10) + parsedValue;
+                        mathProblemNumberOffset++;
+                        i++;
                     }
                     
                     mathProblemOffset++;
@@ -150,11 +188,19 @@ namespace Aoc25.Day6B
                 if(puzzleInput[i] == MathProblemNumberLineSeparator)
                 {
                     mathProblemOffset = 0;
-                    x *= 10;
                 }
             }    
 
             Console.WriteLine("");
+
+            for(int a = 0; a < 5; a++)
+            {
+                for(int i = 0; i < X; i++)
+                {
+                    Console.WriteLine($"number ({a}, {i}) = { mathProblems[a].Numbers[i]}");
+                }           
+                Console.WriteLine();   
+            }
         }
 
         /// <summary>
@@ -177,7 +223,7 @@ namespace Aoc25.Day6B
                 }
                 else
                 {
-                    ulong problemResult = 0;
+                    ulong problemResult = 1;
                     for(int j = 0; j < X; j++)
                     {
                         problemResult *= mathProblems[i].Numbers[j];
