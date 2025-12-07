@@ -15,7 +15,7 @@ namespace Aoc25.Day6A
         /// <summary>
         /// The correct result when solving for the personalized puzzle input.
         /// </summary>
-        public const ulong PersonalizedInput = 8557;
+        public const ulong PersonalizedInput = 4583860641327;
 
         /// <summary>
         /// Gets whether the solution for the specified puzzle input can be validated for correctness.

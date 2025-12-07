@@ -1,9 +1,9 @@
-﻿
+
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Aoc25.Common;
 
-namespace Aoc25.Day6B
+namespace Aoc25.Day6
 {
     public class Program
     {
@@ -27,7 +27,7 @@ namespace Aoc25.Day6B
             }
             else {
 #if DEBUG
-                puzzleInput = PuzzleInput.Example;
+                puzzleInput = Day6A.PuzzleInput.Personalized;
 #else
                 puzzleInput = null;
 #endif
@@ -46,22 +46,19 @@ namespace Aoc25.Day6B
         /// <param name="args"> Passed arguments. </param>
         public static void Main(string[] args)
         {
-            ulong puzzleResult = 0;
+            ulong puzzleResultPartA = 0;
+            ulong puzzleResultPartB = 0;
 
             if(TryGetPuzzleInput(args, out string? puzzleInput))
             {
                 BenchmarkTimer.Tick();
-                puzzleResult = PuzzleSolver.Solve(puzzleInput);
+                puzzleResultPartA = Day6A.PuzzleSolver.Solve(puzzleInput);
+                puzzleResultPartB = Day6B.PuzzleSolver.Solve(puzzleInput);
                 BenchmarkTimer.Tock();
                 BenchmarkTimer.PrintElapsedMilliseconds();
             }
 
-            FastConsole.WriteLine(puzzleResult);     
-#if DEBUG
-            if(PuzzleResult.IsValidatable(puzzleInput)) {
-                Debug.Assert(PuzzleResult.IsValid(puzzleInput, puzzleResult));
-            }
-#endif  
+            FastConsole.WriteLine($"{puzzleResultPartA} {puzzleResultPartB}");     
         }
     }
 }

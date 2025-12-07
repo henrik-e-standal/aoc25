@@ -10,7 +10,7 @@ namespace Aoc25.Day6B
         /// <summary>
         /// The correct result when solving for the example puzzle input.
         /// </summary>
-        public const ulong ExampleInput = 43;
+        public const ulong ExampleInput = 3263827;
 
         /// <summary>
         /// The correct result when solving for the personalized puzzle input.

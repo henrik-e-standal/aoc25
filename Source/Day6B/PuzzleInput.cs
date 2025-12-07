@@ -8,11 +8,6 @@ namespace Aoc25.Day6B
     internal static class PuzzleInput
     {
         /// <summary>
-    /// Stores hardcoded puzzle inputs.
-    /// </summary>
-    internal static class PuzzleInput
-    {
-        /// <summary>
         /// The puzzle example input.
         /// </summary>
         public static readonly string Example = 
