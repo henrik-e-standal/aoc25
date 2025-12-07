@@ -22,14 +22,14 @@ namespace Aoc25.Day6A
         private struct MathProblemCalculation
         {
             /// <summary>
-            /// The character that specifies the math operation to perform in this calculation.
-            /// </summary>
-            public char OperationCharacter;
-
-            /// <summary>
             /// The result of math problem calculation.
             /// </summary>
             public ulong Result;
+
+            /// <summary>
+            /// The character that specifies the math operation to perform in this calculation.
+            /// </summary>
+            public char OperationCharacter;
         }
 
         /// <summary>
@@ -56,11 +56,10 @@ namespace Aoc25.Day6A
         }
 
         /// <summary>
-        /// Attempts to get the numeric number of a character.
+        /// Determines whether a character represents a numeric value.
         /// </summary>
-        /// <param name="character"> The character whose numeric value to get. </param>
-        /// <param name="numericValue"> The numeric value of the character. </param>
-        /// <returns> True if the character was a number, otherwise false. </returns>
+        /// <param name="character"> The character to check. </param>
+        /// <returns> True if the character was a numeric value, otherwise false. </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool CharacterIsNumericValue(char character)
         {
@@ -110,7 +109,7 @@ namespace Aoc25.Day6A
         {
             int mathProblemOffset = 0;
 
-            for(int i = 0; i < puzzleInput.Length; i++)
+            for(int i = 0; i <puzzleInput.Length; i++)
             {
                 if(CharacterIsNumericValue(puzzleInput[i]))
                 {
@@ -121,18 +120,11 @@ namespace Aoc25.Day6A
                         i++;
                     }
 
-                    switch (mathProblemCalculations[mathProblemOffset].OperationCharacter)
-                    {
-                        case '*':
-                        {
-                            mathProblemCalculations[mathProblemOffset].Result *= mathProblemNumber;
-                            break;
-                        }
-                        case '+':
-                        {
-                            mathProblemCalculations[mathProblemOffset].Result += mathProblemNumber;
-                            break;
-                        }
+                    if(mathProblemCalculations[mathProblemOffset].OperationCharacter == '*') {
+                        mathProblemCalculations[mathProblemOffset].Result *= mathProblemNumber;
+                    }
+                    else {
+                        mathProblemCalculations[mathProblemOffset].Result += mathProblemNumber;
                     }
 
                     mathProblemOffset++;
