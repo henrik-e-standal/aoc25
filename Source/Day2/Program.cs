@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Aoc25.Common;
 
-namespace Aoc25.Day4
+namespace Aoc25.Day2
 {
     public class Program
     {
@@ -27,7 +27,7 @@ namespace Aoc25.Day4
             }
             else {
 #if DEBUG
-                puzzleInput = Day4A.PuzzleInput.Personalized;
+                puzzleInput = Day2A.PuzzleInput.Personalized;
 #else
                 puzzleInput = null;
 #endif
@@ -52,13 +52,13 @@ namespace Aoc25.Day4
             if(TryGetPuzzleInput(args, out string? puzzleInput))
             {
                 BenchmarkTimer.Tick();
-                puzzleResultPartA = Day4A.PuzzleSolver.Solve(puzzleInput);
-                puzzleResultPartB = Day4B.PuzzleSolver.Solve(puzzleInput);
+                puzzleResultPartA = Day2A.PuzzleSolver.Solve(puzzleInput);
+                puzzleResultPartB = Day2B.PuzzleSolver.Solve(puzzleInput);
                 BenchmarkTimer.Tock();
                 BenchmarkTimer.PrintElapsedMilliseconds();
             }
 
-            FastConsole.WriteLine($"{puzzleResultPartA} {puzzleResultPartB}");     
+            FastConsole.WriteLine($"{puzzleResultPartA} {puzzleResultPartB}");        
         }
     }
 }
