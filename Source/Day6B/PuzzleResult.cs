@@ -5,7 +5,7 @@ namespace Aoc25.Day6B
     /// <summary>
     /// Stores valid solutions to different puzzle inputs.
     /// </summary>
-    internal static class PuzzleResult
+    public static class PuzzleResult
     {
         /// <summary>
         /// The correct result when solving for the example puzzle input.
@@ -15,7 +15,7 @@ namespace Aoc25.Day6B
         /// <summary>
         /// The correct result when solving for the personalized puzzle input.
         /// </summary>
-        public const ulong PersonalizedInput = 8557;
+        public const ulong PersonalizedInput = 11602774058280;
 
         /// <summary>
         /// Gets whether the solution for the specified puzzle input can be validated for correctness.

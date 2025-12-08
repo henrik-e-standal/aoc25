@@ -8,29 +8,12 @@ namespace Aoc25.Day6A
     /// <summary>
     /// Contains the puzzle solving code.
     /// </summary>
-    internal static class PuzzleSolver
+    public static class PuzzleSolver
     {
         /// <summary>
         /// The maximum number of math problems this solver can keep track of.
         /// </summary>
-        private const int MaxSupportedMathProblemCalculations = 1024;
-
-        /// <summary>
-        /// Represents a math problem calculation.
-        /// </summary>
-        [DebuggerDisplay("{OperationCharacter} {Result}")]
-        private struct MathProblemCalculation
-        {
-            /// <summary>
-            /// The result of math problem calculation.
-            /// </summary>
-            public ulong Result;
-
-            /// <summary>
-            /// The character that specifies the math operation to perform in this calculation.
-            /// </summary>
-            public char OperationCharacter;
-        }
+        private const int MaxSupportedMathProblems = 1024;
 
         /// <summary>
         /// The character used to represent the separator between two math problem numbers.
@@ -67,28 +50,23 @@ namespace Aoc25.Day6A
         }
 
         /// <summary>
-        /// Determines which math operation to perform for each math problem in the puzzle and stores 
-        /// the result in <see cref="mathProblemCalculations"/>.
+        /// Determines the operator of each math problem in the puzzle.
         /// </summary>
         /// <param name="puzzleInput"> The puzzle input containing the math problems. </param>
-        /// <param name="mathProblemCalculations"> Array containing the puzzle math problem calculations. </param>
-        private static void DetermineMathProblemOperations(string puzzleInput, MathProblemCalculation[] mathProblemCalculations)
+        /// <returns> The operator of each math problem, and the number of math problems in the puzzle input. </returns>
+        private static (char[] mathProblemOperators, int mathProblemCount) DetermineMathProblemOperators(string puzzleInput)
         {
             int mathProblemCount = 0;
+            var mathProblemOperators = new char[MaxSupportedMathProblems];
 
+            // Find all math operators, in reverse order.
             for(int i = (puzzleInput.Length - 1); i >= 0; i--)
             {
                 char currentChar = puzzleInput[i];
 
-                if(currentChar == '*')
+                if((currentChar == '*') || (currentChar ==  '+'))
                 {
-                    mathProblemCalculations[mathProblemCount].OperationCharacter = currentChar;
-                    mathProblemCalculations[mathProblemCount].Result = 1;
-                    mathProblemCount++;
-                }
-                else if (currentChar ==  '+')
-                {
-                    mathProblemCalculations[mathProblemCount].OperationCharacter = currentChar;
+                    mathProblemOperators[mathProblemCount] = currentChar;
                     mathProblemCount++;
                 }
                 else if(currentChar == MathProblemNumberLineSeparator)
@@ -97,18 +75,34 @@ namespace Aoc25.Day6A
                 }
             }
 
-            Array.Reverse(mathProblemCalculations, 0, mathProblemCount);
+            // Reverse all math operators to get them in correct order (i.e. as given in puzzle input).
+            Array.Reverse(mathProblemOperators, 0, mathProblemCount);
+
+            return (mathProblemOperators, mathProblemCount);
         }
 
         /// <summary>
-        /// Computes the result of each math problem in the puzzle and stores the result in <see cref="mathProblemCalculations"/>.
+        /// Computes the result of each math problem in the puzzle.
         /// </summary>
         /// <param name="puzzleInput"> The puzzle input containing the math problems. </param>
-        /// <param name="mathProblemCalculations"> Array containing the puzzle math problem calculations. </param>
-        private static void ComputeMathProblemSolutions(string puzzleInput, MathProblemCalculation[] mathProblemCalculations)
+        /// <param name="mathProblemOperators"> Array containing the operators to use for each math problem. </param>
+        /// <param name="mathProblemCount"> The number of math problems in the puzzle input. </param>
+        /// <returns> The result of each math problem, stored in an array. </returns>
+        private static ulong[] ComputeMathProblemSolutions(string puzzleInput, char[] mathProblemOperators, int mathProblemCount)
         {
             int mathProblemOffset = 0;
+            var mathProblemResults = new ulong[MaxSupportedMathProblems];
 
+            // Set the result for each multiply math problem results to 1 initially.
+            // This allows us to multiply iteratively when enumerating the puzzle input below.
+            for(int i = 0; i < mathProblemCount; i++)
+            {
+                if(mathProblemOperators[i] == '*') {
+                    mathProblemResults[i] = 1;
+                }
+            }
+
+            // Compute the solution to each math problem in the puzzle.
             for(int i = 0; i <puzzleInput.Length; i++)
             {
                 if(CharacterIsNumericValue(puzzleInput[i]))
@@ -120,11 +114,11 @@ namespace Aoc25.Day6A
                         i++;
                     }
 
-                    if(mathProblemCalculations[mathProblemOffset].OperationCharacter == '*') {
-                        mathProblemCalculations[mathProblemOffset].Result *= mathProblemNumber;
+                    if(mathProblemOperators[mathProblemOffset] == '*') {
+                        mathProblemResults[mathProblemOffset] *= mathProblemNumber;
                     }
                     else {
-                        mathProblemCalculations[mathProblemOffset].Result += mathProblemNumber;
+                        mathProblemResults[mathProblemOffset] += mathProblemNumber;
                     }
 
                     mathProblemOffset++;
@@ -139,20 +133,23 @@ namespace Aoc25.Day6A
                     break;
                 }
             }    
+
+            return mathProblemResults;
         }
 
         /// <summary>
         /// Computes the sum of the result of each math problem in the puzzle.
         /// </summary>
-        /// <param name="mathProblemCalculations"> Array containing the solved math problems. </param>
+        /// <param name="mathProblemResults"> The result of each math problem. </param>
+        /// <param name="mathProblemCount"> The number of math problems in the puzzle input. </param>
         /// <returns> The sum of all the math problems in the puzzle. </returns>
-        private static ulong SumAllMathProblemSolutions(MathProblemCalculation[] mathProblemCalculations)
+        private static ulong SumAllMathProblemSolutions(ulong[] mathProblemResults, int mathProblemCount)
         {
             ulong result = 0;
 
-            for(int i = 0; i < mathProblemCalculations.Length; i++)
+            for(int i = 0; i < mathProblemCount; i++)
             {
-                result += mathProblemCalculations[i].Result;
+                result += mathProblemResults[i];
             }
 
             return result;
@@ -165,16 +162,14 @@ namespace Aoc25.Day6A
         /// <returns> The solution to the puzzle, solving for the passed puzzle input. </returns>
         public static ulong Solve(string puzzleInput)
         {
-            var mathProblemCalculations = new MathProblemCalculation[MaxSupportedMathProblemCalculations];
-            
             // Determine which math operation to perform for each math problem in the puzzle input.
-            DetermineMathProblemOperations(puzzleInput, mathProblemCalculations);
+            var (mathProblemOperators, mathProblemCount) = DetermineMathProblemOperators(puzzleInput);
 
             // Computes the result of each math problem in the puzzle input.
-            ComputeMathProblemSolutions(puzzleInput, mathProblemCalculations);
+            var mathProblemResults = ComputeMathProblemSolutions(puzzleInput, mathProblemOperators, mathProblemCount);
  
             // Computes the sum of the result of each math problem in the puzzle input.
-            return SumAllMathProblemSolutions(mathProblemCalculations);
+            return SumAllMathProblemSolutions(mathProblemResults, mathProblemCount);
         }
     }
 }

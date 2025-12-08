@@ -8,53 +8,48 @@ namespace Aoc25.Day6B
     /// <summary>
     /// Contains the puzzle solving code.
     /// </summary>
-    internal static class PuzzleSolver
+    public static class PuzzleSolver
     {
         /// <summary>
-        /// The maximum number of math problems this solver can keep track of.
+        /// A fixed, inline array with a capacity of 16.
         /// </summary>
-        private const int MaxSupportedMathProblemCalculations = 1024;
-
-        private const int X = 15;
-
-        [InlineArray(X)]
+        /// <typeparam name="T"> The type of item stored in the array. </typeparam>
+        [InlineArray(MaxSupportedNumbersPerMathProblem)]
         private struct FixedArray<T>
         {
+            /// <summary>
+            /// First element in the array.
+            /// </summary>
             T FirstElement;
         }
 
         /// <summary>
-        /// Represents a math problem calculation.
+        /// Stores information about a math problem operator.
         /// </summary>
-        [DebuggerDisplay("{OperationCharacter} {Result}")]
+        [DebuggerDisplay("{Character} {IndexOffset}")]
         private struct MathProblemOperator
         {
-            public char OperationCharacter;
+            /// <summary>
+            /// The index offset in the puzzle input line where the math operator was found.
+            /// </summary>
+            public int IndexOffset;
 
-            public int LineIndexOffset;
+            /// <summary>
+            /// The character that represents the math operator.
+            /// </summary>
+            public char Character;
         }
 
         /// <summary>
-        /// Represents a math problem calculation.
+        /// The maximum amount of math problems this solver can keep track of.
         /// </summary>
-        [DebuggerDisplay("{OperationCharacter} {OperationCharacterLineIndex}")]
-        private struct MathProblem
-        {
-            /// <summary>
-            /// Stores the numbers to perform the math operation on.
-            /// </summary>
-            public FixedArray<uint> Numbers;
+        private const int MaxSupportedMathProblems = 1024;
 
-            public ushort Length;
-
-            /// <summary>
-            /// The character that specifies the math operation to perform in this calculation.
-            /// </summary>
-            public char OperationCharacter;
-
-            public int OperationCharacterLineOffset;
-        }
-
+        /// <summary>
+        /// The maximum amount of numbers each math problem can consist of.
+        /// </summary>
+        private const int MaxSupportedNumbersPerMathProblem = 15;       
+        
         /// <summary>
         /// The character used to represent the separator between two math problem numbers.
         /// </summary>
@@ -79,155 +74,144 @@ namespace Aoc25.Day6B
         }
 
         /// <summary>
-        /// Attempts to get the numeric number of a character.
-        /// </summary>
-        /// <param name="character"> The character whose numeric value to get. </param>
-        /// <param name="numericValue"> The numeric value of the character. </param>
-        /// <returns> True if the character was a number, otherwise false. </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool CharacterIsNumericValue(char character)
-        {
-            return (character >= '0') && (character <= '9');
-        }
-
-        /// <summary>
-        /// Determines which math operation to perform for each math problem in the puzzle and stores 
-        /// the result in <see cref="mathProblemCalculations"/>.
+        /// Determines the operators to use for each math problem in the puzzle.
         /// </summary>
         /// <param name="puzzleInput"> The puzzle input containing the math problems. </param>
-        /// <param name="mathProblemCalculations"> Array containing the puzzle math problem calculations. </param>
-        /// <param name="lastDigitIndex"> The index of the last digit in the puzzle input. </param>
-        private static void DetermineMathProblemOperations(
-            string puzzleInput, 
-            MathProblem[] mathProblems, 
-            out int lastDigitIndex)
+        /// <returns> The operator for each math problem, and the number of math problems in the puzzle input. </returns>
+        private static (MathProblemOperator[] mathProblemOperators, int mathProblemCount) DetermineMathProblemOperators(
+            string puzzleInput)
         {
-            int mathProblemCount = 0;
+            int mathOperatorCount = 0;
+            var mathOperators = new MathProblemOperator[MaxSupportedMathProblems];
+
             int i;
 
+            // Find all math operators, in reverse order.
+            // Also store the puzzle input index at which each operator was found.
             for(i = (puzzleInput.Length - 1); i >= 0; i--)
             {
                 char currentChar = puzzleInput[i];
 
                 if((currentChar == '*') || (currentChar ==  '+'))
                 {
-                    mathProblems[mathProblemCount].OperationCharacter = currentChar;
-                    mathProblems[mathProblemCount].OperationCharacterLineOffset = i;
-                    mathProblemCount++;
+                    mathOperators[mathOperatorCount].Character = currentChar;
+                    mathOperators[mathOperatorCount].IndexOffset = i;
+                    mathOperatorCount++;
                 }
                 else if(currentChar == MathProblemNumberLineSeparator)
                 {
+                    i++; // Now points to the index of the last math operator found.
                     break;
                 }
             }
-
-            //Array.Reverse()
-
-            for(int j = 0; j < mathProblemCount; j++)
+ 
+            // Reverse all math operators to get them in correct order (i.e. as given in 
+            // puzzle input string). Correct the indices so that they store the offset 
+            // at which each operator is found in the puzzle input line.
+            for(int j = 0; j < ((mathOperatorCount + 1) / 2); j++)
             {
+                int swapIndex = ((mathOperatorCount - 1) - j);
                 
+                // Swap operators to reverse order.
+                var tmp = mathOperators[j];
+                mathOperators[j] = mathOperators[swapIndex];
+                mathOperators[swapIndex] = tmp; 
+
+                // Correct the operator index offsets.
+                mathOperators[j].IndexOffset -= i; 
+                mathOperators[swapIndex].IndexOffset -= i;
             }
 
-            lastDigitIndex = (i - 1);
-        }
-
-          private static void DetermineMathProblemNumbers2(
-            string puzzleInput, 
-            MathProblem[] mathProblems,
-            int lastDigitIndex)
-        {
-            while(true)
-            {
-                
-            }
+            return (mathOperators, mathOperatorCount);
         }
 
         /// <summary>
-        /// Computes the result of each math problem in the puzzle and stores the result in <see cref="mathProblems"/>.
+        /// Computes the result of each math problem in the puzzle.
         /// </summary>
         /// <param name="puzzleInput"> The puzzle input containing the math problems. </param>
-        /// <param name="mathProblems"> Array containing the puzzle math problem calculations. </param>
-        /// <param name="lastDigitIndex"> The index of the last digit in the puzzle input. </param>
-        private static void DetermineMathProblemNumbers(
+        /// <param name="mathProblemOperators"> Array containing the math problem operators and their positions. </param>
+        /// <param name="mathProblemCount"> The number of math problems in the puzzle input. </param>
+        /// <returns> Every number of every math problem, stored in an array "grouped" by math problem. </returns>
+        private static FixedArray<uint>[] DetermineMathProblemNumbers(
             string puzzleInput, 
-            MathProblem[] mathProblems,
-            int lastDigitIndex)
+            MathProblemOperator[] mathOperators, 
+            int mathProblemCount)
         {
-            int mathProblemOffset = 0;
+            var mathProblemNumbers = new FixedArray<uint>[mathProblemCount];
             
-            for(int i = 0; i <= puzzleInput.Length; i++)
+            int puzzleInputIndex = 0;
+            int puzzleInputLineOffset;
+
+            while((puzzleInput[puzzleInputIndex] != '*') && (puzzleInput[puzzleInputIndex] != '+'))
             {
-                if(puzzleInput[i] != MathProblemNumberLineSeparator)
+                puzzleInputLineOffset = puzzleInputIndex;
+
+                for(int mathProblemIndex = 0; mathProblemIndex < mathProblemCount; mathProblemIndex++)
                 {
-                    if(mathProblemOffset == 2)
-                    {
-                        Console.WriteLine("");
-                    }
                     int mathProblemNumberOffset = 0;
+                    puzzleInputIndex = (puzzleInputLineOffset + mathOperators[mathProblemIndex].IndexOffset);
 
                     // Ignore leading whitespaces (i.e. zeros) in the current math problem number.
-                    while(puzzleInput[i] == MathProblemNumberSeparator) 
+                    while(puzzleInput[puzzleInputIndex] == MathProblemNumberSeparator) 
                     {
-                        i++;
+                        puzzleInputIndex++;
                         mathProblemNumberOffset++;
                     }
 
-                    // Bla bla
-                    while(TryGetCharacterNumericValue(puzzleInput[i], out uint parsedValue))
+                    // Parse every digit of the current math problem number.
+                    while(TryGetCharacterNumericValue(puzzleInput[puzzleInputIndex], out uint parsedValue))
                     {
-                        ref uint mathProblemNumber = ref mathProblems[mathProblemOffset].Numbers[mathProblemNumberOffset];
-                        
-                        mathProblemNumber = (mathProblemNumber * 10) + parsedValue;
+                        ref uint mathProblemNumber = ref mathProblemNumbers[mathProblemIndex][mathProblemNumberOffset];
+                        mathProblemNumber = ((mathProblemNumber * 10) + parsedValue);
                         mathProblemNumberOffset++;
-                        i++;
+                        puzzleInputIndex++;
                     }
-                    
-                    mathProblemOffset++;
-                } 
-
-                if(puzzleInput[i] == MathProblemNumberLineSeparator)
-                {
-                    mathProblemOffset = 0;
                 }
-            }    
 
-            Console.WriteLine("");
-
-            for(int a = 0; a < 5; a++)
-            {
-                for(int i = 0; i < X; i++)
-                {
-                    Console.WriteLine($"number ({a}, {i}) = { mathProblems[a].Numbers[i]}");
-                }           
-                Console.WriteLine();   
+                while(puzzleInput[puzzleInputIndex++] != MathProblemNumberLineSeparator);
             }
+
+            return mathProblemNumbers;
         }
 
         /// <summary>
         /// Computes the sum of the result of each math problem in the puzzle.
         /// </summary>
-        /// <param name="mathProblems"> Array containing the solved math problems. </param>
+        /// <param name="mathProblemOperators"> Array containing the math problem operators.  </param>
+        /// <param name="mathProblemNumbers"> Array containing the numbers for each math problem. </param>
+        /// <param name="mathProblemCount"> The number of math problems in the puzzle input. </param>
         /// <returns> The sum of all the math problems in the puzzle. </returns>
-        private static ulong CalculateMathProblemSolution(MathProblem[] mathProblems)
+        private static ulong CalculateMathProblemSolution(
+            MathProblemOperator[] mathProblemOperators, 
+            FixedArray<uint>[] mathProblemNumbers, 
+            int mathProblemCount)
         {
             ulong totalResult = 0;
 
-            for(int i = 0; i < mathProblems.Length; i++)
+            for(int i = 0; i < mathProblemCount; i++)
             {
-                if(mathProblems[i].OperationCharacter == '+')
+                if(mathProblemOperators[i].Character == '+')
                 {
-                    for(int j = 0; j < X; j++)
+                    for(int j = 0; j < MaxSupportedNumbersPerMathProblem; j++)
                     {
-                        totalResult += mathProblems[i].Numbers[j];
+                        totalResult += mathProblemNumbers[i][j];
                     }
                 }
                 else
                 {
                     ulong problemResult = 1;
-                    for(int j = 0; j < X; j++)
+
+                    for(int j = 0; j < MaxSupportedNumbersPerMathProblem; j++)
                     {
-                        problemResult *= mathProblems[i].Numbers[j];
+                        uint number = mathProblemNumbers[i][j];
+
+                        if(number == 0) {
+                            break;
+                        }
+                       
+                        problemResult *= number;
                     }
+
                     totalResult += problemResult;
                 }
             }
@@ -242,16 +226,14 @@ namespace Aoc25.Day6B
         /// <returns> The solution to the puzzle, solving for the passed puzzle input. </returns>
         public static ulong Solve(string puzzleInput)
         {
-            var mathProblemCalculations = new MathProblem[MaxSupportedMathProblemCalculations];
-            
             // Determine which math operation to perform for each math problem in the puzzle input.
-            DetermineMathProblemOperations(puzzleInput, mathProblemCalculations, out var lastDigitIndex);
+            var (mathProblemOperators, mathProblemCount) = DetermineMathProblemOperators(puzzleInput);
 
-            // Computes the result of each math problem in the puzzle input.
-            DetermineMathProblemNumbers(puzzleInput, mathProblemCalculations, lastDigitIndex);
+            // Determine the numbers for each math problem.
+            var mathProblemNumbers = DetermineMathProblemNumbers(puzzleInput, mathProblemOperators, mathProblemCount);
  
             // Computes the sum of the result of each math problem in the puzzle input.
-            return CalculateMathProblemSolution(mathProblemCalculations);
+            return CalculateMathProblemSolution(mathProblemOperators, mathProblemNumbers, mathProblemCount);
         }
     }
 }

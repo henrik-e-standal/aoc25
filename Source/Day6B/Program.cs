@@ -27,7 +27,7 @@ namespace Aoc25.Day6B
             }
             else {
 #if DEBUG
-                puzzleInput = PuzzleInput.Example;
+                puzzleInput = PuzzleInput.Personalized;
 #else
                 puzzleInput = null;
 #endif
