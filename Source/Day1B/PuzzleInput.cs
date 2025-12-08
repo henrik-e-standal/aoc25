@@ -3,7 +3,7 @@ namespace Aoc25.Day1B
 {
 #if DEBUG
     /// <summary>
-    /// Contains global immutable state.
+    /// Stores hardcoded puzzle inputs.
     /// </summary>
     public static class PuzzleInput
     {
