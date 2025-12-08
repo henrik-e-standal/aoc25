@@ -60,7 +60,7 @@ namespace Aoc25.Day6A
             var mathProblemOperators = new char[MaxSupportedMathProblems];
 
             // Find all math operators, in reverse order.
-            for(int i = (puzzleInput.Length - 1); i >= 0; i--)
+            for(int i = (puzzleInput.Length - 2); i >= 0; i--)
             {
                 char currentChar = puzzleInput[i];
 

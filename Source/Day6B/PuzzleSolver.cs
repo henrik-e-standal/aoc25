@@ -88,7 +88,7 @@ namespace Aoc25.Day6B
 
             // Find all math operators, in reverse order.
             // Also store the puzzle input index at which each operator was found.
-            for(i = (puzzleInput.Length - 1); i >= 0; i--)
+            for(i = (puzzleInput.Length - 2); i >= 0; i--)
             {
                 char currentChar = puzzleInput[i];
 
