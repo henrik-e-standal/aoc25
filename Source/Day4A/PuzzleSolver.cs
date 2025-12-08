@@ -66,7 +66,7 @@ namespace Aoc25.Day4A
         /// </summary>
         /// <param name="puzzleInput"> The puzzle input containing the grid. </param>
         /// <param name="gridColumnCount"> The number of columns in the puzzle grid. </param>
-        /// <param name="gridRowCount">  The number of rwos in the puzzle grid. </param>
+        /// <param name="gridRowCount">  The number of rows in the puzzle grid. </param>
         /// <returns> A 2-dimensional array that keeps track of which grid cells are occupied. </returns>
         private static Grid<byte> CreateGridOccupancyIndex(string puzzleInput, int gridColumnCount, int gridRowCount)
         {
