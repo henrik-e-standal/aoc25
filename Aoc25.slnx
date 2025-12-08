@@ -7,9 +7,12 @@
     <Project Path="Source/Day3B/Day3B.csproj" /> 
     <Project Path="Source/Day4A/Day4A.csproj" /> 
     <Project Path="Source/Day4B/Day4B.csproj" />
+    <Project Path="Source/Day6A/Day6A.csproj" /> 
+    <Project Path="Source/Day6B/Day6B.csproj" />
 
     <Project Path="Source/Day1/Day1.csproj" /> 
     <Project Path="Source/Day3/Day3.csproj" />  
     <Project Path="Source/Day4/Day4.csproj" /> 
+    <Project Path="Source/Day6/Day6.csproj" /> 
 </Solution>
 
