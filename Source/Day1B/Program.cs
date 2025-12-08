@@ -54,6 +54,7 @@ namespace Aoc25.Day1B
                 BenchmarkTimer.Tick();
                 puzzleResult = PuzzleSolver.Solve(puzzleInput);
                 BenchmarkTimer.Tock();
+                BenchmarkTimer.PrintElapsedMilliseconds();
             }
 
             FastConsole.WriteLine(puzzleResult);     
