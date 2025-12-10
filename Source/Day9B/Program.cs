@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Aoc25.Common;
 
-namespace Aoc25.Day9A
+namespace Aoc25.Day9B
 {
     public class Program
     {
@@ -27,7 +27,7 @@ namespace Aoc25.Day9A
             }
             else {
 #if DEBUG
-                puzzleInput = PuzzleInput.Personalized;
+                puzzleInput = PuzzleInput.Example;
 #else
                 puzzleInput = null;
 #endif

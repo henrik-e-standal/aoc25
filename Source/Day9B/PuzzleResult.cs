@@ -1,5 +1,5 @@
 
-namespace Aoc25.Day9A
+namespace Aoc25.Day9B
 {
 #if DEBUG
     /// <summary>
@@ -10,7 +10,7 @@ namespace Aoc25.Day9A
         /// <summary>
         /// The correct result when solving for the example puzzle input.
         /// </summary>
-        public const ulong ExampleInput = 50;
+        public const ulong ExampleInput = 24;
 
         /// <summary>
         /// The correct result when solving for the personalized puzzle input.
