@@ -6,9 +6,9 @@ namespace Aoc25.Common
 {
     /// <summary>
     /// <para> 
-    /// A fast, fixed-size list of items that is is faster than the normal list that 
-    /// comes with .NET. The extra speeds comes from omission of error checking (correct 
-    /// usage is assumed), not allowing the list to be automatically resized when inserting
+    /// A fast, fixed-size list of items that is faster than the normal list that comes 
+    /// with .NET. The extra speeds comes from omission of error checking (correct usage 
+    /// is assumed), not allowing the list to be automatically resized when inserting
     /// new items and by relaxing certain constraints imposed by normal list implementations.
     /// </para>
     /// <para>
