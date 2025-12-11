@@ -78,8 +78,8 @@ namespace Aoc25.Day4B
         {
             // Stores how many occupied neighbor cells each occupied grid cell has. 
             var gridOccupiedCellNeighborCountLookup = new Grid<byte>(
-                gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin), 
-                gridRowCount + (OccupancyGridMargin + OccupancyGridMargin));
+                gridRowCount + (OccupancyGridMargin + OccupancyGridMargin),
+                gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin));
 
             // Stores the coordinates of each occupied cell in the grid.
             var gridOccupiedCellCoordinates = new FastList<(int Row, int Column)>((gridColumnCount * gridRowCount));
