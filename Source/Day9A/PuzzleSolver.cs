@@ -79,9 +79,9 @@ namespace Aoc25.Day9A
         /// <param name="point2"> The point that defines the rectangle corner opposite to the first. </param>
         /// <returns> The area of the rectangle defined by the points. </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ulong CalculateRectangleArea(Coordinate2D point1, Coordinate2D point2)
+        private static long CalculateRectangleArea(Coordinate2D point1, Coordinate2D point2)
         {
-            return (ulong)Math.Abs(point1.X - point2.X + 1) * (ulong)Math.Abs(point1.Y - point2.Y + 1);
+            return Math.Abs((long)(point1.X - point2.X + 1) * (long)(point1.Y - point2.Y + 1));
         }     
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Aoc25.Day9A
         {
             var (redTileCoordinates, redTileCount) = ParseRedTiles(puzzleInput);
 
-            ulong largestRedTileArea = 0;
+            long largestRedTileArea = 0;
 
             for(int i = 0; i < redTileCount; i++)
             {
@@ -107,7 +107,7 @@ namespace Aoc25.Day9A
                 }
             }
 
-            return largestRedTileArea;
+            return (ulong)largestRedTileArea;
         }
     }
 }
