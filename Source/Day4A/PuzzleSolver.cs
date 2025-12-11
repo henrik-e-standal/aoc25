@@ -74,8 +74,8 @@ namespace Aoc25.Day4A
             // and which are empty. Also allocate a margin around the entire grid. This makes 
             // checking occupancy of neighboring cells of a cell easier later.  
             var gridOccupancyLookup = new Grid<byte>(
-                gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin), 
-                gridRowCount + (OccupancyGridMargin + OccupancyGridMargin));
+                gridRowCount + (OccupancyGridMargin + OccupancyGridMargin),
+                gridColumnCount + (OccupancyGridMargin + OccupancyGridMargin));
 
             int currentRow = OccupancyGridMargin; 
             int currentColumn = 0;

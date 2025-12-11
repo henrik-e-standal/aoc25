@@ -14,9 +14,11 @@
     <Project Path="Source/Day6A/Day6A.csproj" /> 
     <Project Path="Source/Day6B/Day6B.csproj" />
     <Project Path="Source/Day7A/Day7A.csproj" /> 
-    <Project Path="Source/Day7B/Day7B.csproj" />
+    <Project Path="Source/Day7B/Day7B.csproj" /> 
     <Project Path="Source/Day8A/Day8A.csproj" /> 
     <Project Path="Source/Day8B/Day8B.csproj" />
+    <Project Path="Source/Day9A/Day9A.csproj" />
+    <Project Path="Source/Day10A/Day10A.csproj" /> 
 
     <Project Path="Source/Day1/Day1.csproj" /> 
     <Project Path="Source/Day2/Day2.csproj" /> 
@@ -26,5 +28,6 @@
     <Project Path="Source/Day6/Day6.csproj" />  
     <Project Path="Source/Day7/Day7.csproj" />  
     <Project Path="Source/Day8/Day8.csproj" /> 
+    
 </Solution>
 
