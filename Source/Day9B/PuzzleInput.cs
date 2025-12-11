@@ -10,13 +10,37 @@ namespace Aoc25.Day9B
         /// <summary>
         /// The puzzle example input.
         /// </summary>
-        public static readonly string Example = 
+        /*public static readonly string Example = 
         """
         7,1
         11,1
         11,7
         9,7
         9,5
+        2,5
+        2,3
+        7,3
+
+        """;*/
+
+        /// <summary>
+        /// The puzzle example input.
+        /// </summary>
+        public static readonly string Example = 
+        """
+        7,1
+        11,1
+        11,2
+        18,2
+        18,5
+        11,5
+        11,7
+        9,7
+        9,5
+        5,5
+        5,9
+        3,9
+        3,5
         2,5
         2,3
         7,3

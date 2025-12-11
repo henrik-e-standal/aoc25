@@ -21,6 +21,16 @@ namespace Aoc25.Common
         /// f(row, column) = (row * column_count) + column
         /// </remarks>
         private readonly T[] data;
+ 
+        /// <summary>
+        /// Gets the number of rows in the grid.
+        /// </summary>
+        public int RowCount
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get;
+            init;
+        }
 
         /// <summary>
         /// Gets the number of columns in the grid.
@@ -32,16 +42,6 @@ namespace Aoc25.Common
             init;
         } 
         
-        /// <summary>
-        /// Gets the number of rows in the grid.
-        /// </summary>
-        public int RowCount
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-            init;
-        }
-
         /// <summary>
         /// Gets or sets the item at the specified position in the grid.
         /// </summary>
@@ -60,14 +60,14 @@ namespace Aoc25.Common
         /// <summary>
         /// Creates a new <see cref="FastGrid{T}"/> with the specified dimensions.
         /// </summary>
-        /// <param name="columnCount"> The number of columns in the grid. </param>
         /// <param name="rowCount"> The number of rows in the grid. </param>
-        public Grid(int columnCount, int rowCount)
+        /// <param name="columnCount"> The number of columns in the grid. </param>
+        public Grid(int rowCount, int columnCount)
         {
+            RowCount = rowCount; 
             ColumnCount = columnCount;
-            RowCount = rowCount;
 
-            data = new T[columnCount * rowCount];
+            data = new T[rowCount * columnCount];
         }
  
         /// <summary>
