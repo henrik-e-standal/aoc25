@@ -10,12 +10,12 @@ namespace Aoc25.Day8B
         /// <summary>
         /// The correct result when solving for the example puzzle input.
         /// </summary>
-        public const ulong ExampleInput = 21;
+        public const ulong ExampleInput = 25272;
 
         /// <summary>
         /// The correct result when solving for the personalized puzzle input.
         /// </summary>
-        public const ulong PersonalizedInput = 1630;
+        public const ulong PersonalizedInput = 302133440;
 
         /// <summary>
         /// Gets whether the solution for the specified puzzle input can be validated for correctness.
