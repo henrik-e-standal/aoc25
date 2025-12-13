@@ -218,13 +218,19 @@ namespace Aoc25.Common
             return true;
         }   
         
+        /// <summary>
+        /// Removes the item stored at the back of the queue without returning it.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveBack()
         {
             count--;
             tailIndex = (tailIndex + 1U) & capacityMinusOne;
-        }
-
+        }  
+        
+        /// <summary>
+        /// Removes the item stored at the front of the queue without returning it.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveFront()
         {
