@@ -51,22 +51,21 @@ namespace Aoc25.Day9A
 
             for(int i = 0; i < puzzleInput.Length;)
             {
-                uint xCoordinateNumber = 0;
-                uint yCoordinateNumber = 0; 
+                uint xCoordinate = 0;
+                uint yCoordinate = 0; 
 
                 while(TryGetCharacterNumericValue(puzzleInput[i++], out uint number)) {
-                    xCoordinateNumber = (xCoordinateNumber * 10) + number;
+                    xCoordinate = (xCoordinate * 10) + number;
                 } 
                 while(TryGetCharacterNumericValue(puzzleInput[i++], out uint number)) {
-                    yCoordinateNumber = (yCoordinateNumber * 10) + number;
+                    yCoordinate = (yCoordinate * 10) + number;
                 }
 
-                redTileCoordinates[redTileOffset] = new Coordinate2D
+                redTileCoordinates[ redTileOffset++] = new Coordinate2D
                 {
-                    X = (int)xCoordinateNumber,
-                    Y = (int)yCoordinateNumber,
+                    X = (int)xCoordinate,
+                    Y = (int)yCoordinate,
                 };
-                redTileOffset++;
             }
 
             return (redTileCoordinates, redTileOffset);
@@ -79,20 +78,24 @@ namespace Aoc25.Day9A
         /// <param name="point2"> The point that defines the rectangle corner opposite to the first. </param>
         /// <returns> The area of the rectangle defined by the points. </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static long CalculateRectangleArea(Coordinate2D point1, Coordinate2D point2)
+        private static long CalculateRectangleArea(
+            Coordinate2D point1, 
+            Coordinate2D point2)
         {
-            return Math.Abs((long)(point1.X - point2.X + 1) * (long)(point1.Y - point2.Y + 1));
-        }     
+            return (long)(Math.Abs(point1.X - point2.X) + 1) * 
+                   (long)(Math.Abs(point1.Y - point2.Y) + 1);
+        }      
 
         /// <summary>
-        /// Solve the puzzle using the passed puzzle input.
+        /// Finds the area of the largest rectangle that can be formed using two red tile coordinates.
         /// </summary>
-        /// <param name="puzzleInput"> The puzzle input to solve for. </param>
-        /// <returns> The solution to the puzzle, solving for the passed puzzle input. </returns>
-        public static ulong Solve(string puzzleInput)
+        /// <param name="redTileCoordinates"> A list of red tile coordinates. </param>
+        /// <param name="redTileCount"> The number of red tiles in the puzzle input. </param>
+        /// <returns> The area of the largest rectangle that can be formed using two red tile coordinates. </returns>
+        private static ulong FindLargestRectangleArea(
+            Coordinate2D[] redTileCoordinates, 
+            int redTileCount)
         {
-            var (redTileCoordinates, redTileCount) = ParseRedTiles(puzzleInput);
-
             long largestRedTileArea = 0;
 
             for(int i = 0; i < redTileCount; i++)
@@ -108,6 +111,18 @@ namespace Aoc25.Day9A
             }
 
             return (ulong)largestRedTileArea;
+        }
+
+        /// <summary>
+        /// Solve the puzzle using the passed puzzle input.
+        /// </summary>
+        /// <param name="puzzleInput"> The puzzle input to solve for. </param>
+        /// <returns> The solution to the puzzle, solving for the passed puzzle input. </returns>
+        public static ulong Solve(string puzzleInput)
+        {
+            var (redTileCoordinates, redTileCount) = ParseRedTiles(puzzleInput);
+
+            return FindLargestRectangleArea(redTileCoordinates, redTileCount);
         }
     }
 }

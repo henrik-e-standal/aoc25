@@ -1,0 +1,51 @@
+   private static void CreateSVG(
+            Coordinate2D[] redTiles, 
+            Coordinate2D[] boundaryTiles,
+            Coordinate2D rectPoint1,
+            Coordinate2D rectPoint2,
+            int tileCount)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append($"<svg width=\"50\" height=\"50\" viewBox=\"0 0 100000 100000\" xmlns=\"http://www.w3.org/2000/svg\">");
+            stringBuilder.Append($"<rect fill=\"#fff\" x=\"0\" y=\"0\" width=\"100000\" height=\"100000\"/>");
+            stringBuilder.Append($"<g opacity=\"0.9\">");
+            stringBuilder.Append($"<polyline points=\"");
+            for(int i = 0; i < tileCount; i++)
+            {
+                var c = boundaryTiles[i];
+                stringBuilder.Append($"{c.X},{c.Y} ");
+            }
+             stringBuilder.Append($"\" stroke=\"red\" stroke-width=\"1\" fill=\"red\" />");
+            //stringBuilder.Append($"<rect fill=\"#ff0303ff\" stroke=\"#000\" x=\"100\" y=\"100\" width=\"390\" height=\"390\"/>");
+             stringBuilder.Append($"</g>");
+            
+            stringBuilder.Append($"<g opacity=\"0.7\">");
+            stringBuilder.Append($"<polyline points=\"");
+            for(int i = 0; i < tileCount; i++)
+            {
+                var c = redTiles[i];
+                stringBuilder.Append($"{c.X},{c.Y} ");
+            }
+             stringBuilder.Append($"\" stroke=\"green\" stroke-width=\"1\" fill=\"green\" />");
+            //stringBuilder.Append($"<rect fill=\"#ff0303ff\" stroke=\"#000\" x=\"100\" y=\"100\" width=\"390\" height=\"390\"/>");
+            stringBuilder.Append($"</g>");
+
+            int rectangleTop = Math.Min(rectPoint1.Y, rectPoint2.Y);
+            int rectangleBottom = Math.Max(rectPoint1.Y, rectPoint2.Y);
+            int rectangleLeft = Math.Min(rectPoint1.X, rectPoint2.X);
+            int rectangleRight = Math.Max(rectPoint1.X, rectPoint2.X);
+            int rectangleWidth = ((rectangleRight - rectangleLeft) + 1);
+            int rectangleHeight = ((rectangleBottom - rectangleTop) + 1);
+
+            Console.WriteLine(rectangleWidth * rectangleHeight);
+
+            stringBuilder.Append($"<rect fill=\"blue\" stroke=\"#000\" x=\"{rectangleLeft}\" y=\"{rectangleTop}\" width=\"{rectangleWidth}\" height=\"{rectangleHeight}\"/> ");
+            stringBuilder.Append($"<circle cx=\"{rectPoint1.X}\" cy=\"{rectPoint1.Y}\" r=\"1000\" fill=\"orange\" />");
+            stringBuilder.Append($"<circle cx=\"{rectPoint2.X}\" cy=\"{rectPoint2.Y}\" r=\"1000\" fill=\"orange\" />");
+
+            stringBuilder.Append($"</svg>");
+
+            // <polyline points="50,150 50,200 200,200 200,100" stroke="red" stroke-width="4" fill="none" />
+
+            File.WriteAllText("test.svg", stringBuilder.ToString());
+        }
